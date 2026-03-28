@@ -62,6 +62,35 @@ def _apply_column_patches() -> None:
         if dialect == "mysql" and inspector.has_table("projects"):
             connection.execute(text("ALTER TABLE projects MODIFY COLUMN team_id INT NULL"))
 
+        if inspector.has_table("submissions"):
+            # Normalize legacy uppercase status values from older schema/data.
+            connection.execute(
+                text(
+                    "UPDATE submissions SET status = 'Pending' WHERE UPPER(status) = 'PENDING'"
+                )
+            )
+            connection.execute(
+                text(
+                    "UPDATE submissions SET status = 'Approved' WHERE UPPER(status) = 'APPROVED'"
+                )
+            )
+            connection.execute(
+                text(
+                    "UPDATE submissions "
+                    "SET status = 'Changes Required' "
+                    "WHERE REPLACE(UPPER(status), ' ', '_') IN ('CHANGES_REQUIRED', 'CHANGES_REQUESTED')"
+                )
+            )
+
+        if dialect == "mysql" and inspector.has_table("submissions"):
+            connection.execute(
+                text(
+                    "ALTER TABLE submissions MODIFY COLUMN status "
+                    "ENUM('Pending','Approved','Changes Required') "
+                    "NOT NULL DEFAULT 'Pending'"
+                )
+            )
+
 
 def create_tables() -> None:
     Base.metadata.create_all(bind=engine)

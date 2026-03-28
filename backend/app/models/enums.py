@@ -16,6 +16,20 @@ class SubmissionStatus(str, Enum):
     APPROVED = "Approved"
     CHANGES_REQUIRED = "Changes Required"
 
+    @classmethod
+    def _missing_(cls, value):
+        if isinstance(value, str):
+            normalized = value.strip().replace("-", " ").replace("_", " ").lower()
+            aliases = {
+                "pending": cls.PENDING,
+                "approved": cls.APPROVED,
+                "changes required": cls.CHANGES_REQUIRED,
+                "changesrequested": cls.CHANGES_REQUIRED,
+            }
+            if normalized in aliases:
+                return aliases[normalized]
+        return None
+
 
 class ProjectOwnerType(str, Enum):
     TEAM = "team"
