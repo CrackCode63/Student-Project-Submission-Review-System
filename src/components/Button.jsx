@@ -1,0 +1,45 @@
+import { motion } from 'framer-motion';
+import { cn } from '../utils/cn';
+
+const variantStyles = {
+  gradient:
+    'bg-brand-gradient text-white shadow-glow hover:shadow-glow border border-white/10 dark:border-white/5',
+  secondary:
+    'bg-white/80 text-slate-900 border border-white/60 hover:bg-white dark:bg-slate-900/60 dark:text-white dark:border-white/10 dark:hover:bg-slate-900/90',
+  outline:
+    'border border-primary/20 bg-primary/5 text-primary hover:bg-primary/10 dark:border-primary/30 dark:bg-primary/10 dark:text-primary-100',
+  ghost:
+    'bg-transparent text-slate-700 hover:bg-slate-900/5 dark:text-slate-200 dark:hover:bg-white/5',
+};
+
+const sizeStyles = {
+  sm: 'h-10 px-4 text-sm',
+  md: 'h-11 px-5 text-sm',
+  lg: 'h-12 px-6 text-base',
+};
+
+export function Button({
+  children,
+  className,
+  variant = 'gradient',
+  size = 'md',
+  type = 'button',
+  ...props
+}) {
+  return (
+    <motion.button
+      type={type}
+      whileHover={{ scale: 1.02, y: -1 }}
+      whileTap={{ scale: 0.98 }}
+      className={cn(
+        'inline-flex items-center justify-center gap-2 rounded-2xl font-semibold transition-all duration-300 disabled:cursor-not-allowed disabled:opacity-60',
+        variantStyles[variant],
+        sizeStyles[size],
+        className,
+      )}
+      {...props}
+    >
+      {children}
+    </motion.button>
+  );
+}
