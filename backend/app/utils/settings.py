@@ -16,7 +16,10 @@ class Settings(BaseSettings):
     access_token_expire_minutes: int = 1440
     algorithm: str = "HS256"
     database_url: str = "mysql+pymysql://root:password@localhost:3306/student_project_system"
-    cors_origins: str = Field(default="http://localhost:5173", alias="CORS_ORIGINS")
+    cors_origins: str = Field(
+        default="http://localhost:5173,http://127.0.0.1:5173,http://localhost:5174,http://127.0.0.1:5174",
+        alias="CORS_ORIGINS",
+    )
     upload_dir: str = "uploads"
 
     model_config = SettingsConfigDict(
