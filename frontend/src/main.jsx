@@ -7,16 +7,26 @@ import { AuthProvider } from './context/AuthContext';
 import { ToastProvider } from './context/ToastContext';
 import './index.css';
 
+const AppProviders = ({ children }) => (
+  <ThemeProvider>
+    <ToastProvider>
+      <AuthProvider>
+        <BrowserRouter>{children}</BrowserRouter>
+      </AuthProvider>
+    </ToastProvider>
+  </ThemeProvider>
+);
+
 ReactDOM.createRoot(document.getElementById('root')).render(
-  <React.StrictMode>
-    <ThemeProvider>
-      <ToastProvider>
-        <AuthProvider>
-          <BrowserRouter>
-            <App />
-          </BrowserRouter>
-        </AuthProvider>
-      </ToastProvider>
-    </ThemeProvider>
-  </React.StrictMode>,
+  import.meta.env.DEV ? (
+    <AppProviders>
+      <App />
+    </AppProviders>
+  ) : (
+    <React.StrictMode>
+      <AppProviders>
+        <App />
+      </AppProviders>
+    </React.StrictMode>
+  ),
 );
